@@ -1,0 +1,35 @@
+---
+RecipeFormatVersion: "2020-01-25"
+ComponentName: "{COMPONENT_NAME}"
+ComponentVersion: "{COMPONENT_VERSION}"
+ComponentDescription: "This component comprises a component which reproduces the seg-fault issues experienced with the GG StreamManager SDK"
+ComponentPublisher: "{COMPONENT_AUTHOR}"
+ComponentDependencies:
+  aws.greengrass.StreamManager: 
+    VersionRequirement: ">=0.0.0"
+    DependencyType: HARD
+ComponentConfiguration:
+  DefaultConfiguration:
+    accessControl:
+      aws.greengrass.ipc.pubsub:
+        "{COMPONENT_NAME}:pubsub:1":
+          policyDescription: Allows subscribing to greengrass IPC message-input
+          operations:
+            - "aws.greengrass#SubscribeToTopic"
+          resources:
+            - "*"
+        "{COMPONENT_NAME}:pubsub:2":
+          policyDescription: Allows publishing to greengrass IPC message-output
+          operations:
+            - "aws.greengrass#PublishToTopic"
+          resources:
+            - "*"
+Manifests:
+  - Platform:
+      os: all
+    Artifacts:
+      - URI: "s3://{BUCKET_NAME}/{COMPONENT_NAME}/{COMPONENT_VERSION}/package.zip"
+        Unarchive: ZIP
+    Lifecycle:
+      Install: "chmod a+x {artifacts:decompressedPath}/package/runtime_scripts/install.sh && {artifacts:decompressedPath}/package/runtime_scripts/install.sh {artifacts:decompressedPath}/package"
+      Run: "chmod a+x {artifacts:decompressedPath}/package/runtime_scripts/startup.sh && {artifacts:decompressedPath}/package/runtime_scripts/startup.sh {artifacts:decompressedPath}/package"

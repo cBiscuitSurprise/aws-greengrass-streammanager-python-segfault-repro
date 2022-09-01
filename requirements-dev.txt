@@ -1,0 +1,3 @@
+git+https://github.com/aws-greengrass/aws-greengrass-gdk-cli.git@v1.1.0
+boto3
+pyyaml
