@@ -10,6 +10,7 @@ ComponentDependencies:
     DependencyType: HARD
 ComponentConfiguration:
   DefaultConfiguration:
+    env: "POLL_INTERVAL=0.5 STREAM_NAME=repro.stream READ_TIMEOUT_MILLS=100"
     accessControl:
       aws.greengrass.ipc.pubsub:
         "{COMPONENT_NAME}:pubsub:1":
@@ -31,5 +32,8 @@ Manifests:
       - URI: "s3://{BUCKET_NAME}/{COMPONENT_NAME}/{COMPONENT_VERSION}/package.zip"
         Unarchive: ZIP
     Lifecycle:
-      Install: "chmod a+x {artifacts:decompressedPath}/package/runtime_scripts/install.sh && {artifacts:decompressedPath}/package/runtime_scripts/install.sh {artifacts:decompressedPath}/package"
-      Run: "chmod a+x {artifacts:decompressedPath}/package/runtime_scripts/startup.sh && {artifacts:decompressedPath}/package/runtime_scripts/startup.sh {artifacts:decompressedPath}/package"
+      Setenv:
+        POLL_INTERVAL: "1"
+        STREAM_NAME: "repro.stream"
+      Install: "chmod a+x {artifacts:decompressedPath}/package/runtime_scripts/install.sh && {configuration:/env} {artifacts:decompressedPath}/package/runtime_scripts/install.sh {artifacts:decompressedPath}/package"
+      Run: "chmod a+x {artifacts:decompressedPath}/package/runtime_scripts/startup.sh && {configuration:/env} {artifacts:decompressedPath}/package/runtime_scripts/startup.sh {artifacts:decompressedPath}/package"

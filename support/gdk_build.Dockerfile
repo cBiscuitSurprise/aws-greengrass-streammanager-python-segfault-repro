@@ -10,4 +10,5 @@ RUN mkdir -p /asset/component && \
     pip install --target=/asset/component -r /tmp/requirements.txt
 
 COPY ./component /asset/component
+COPY ./runtime_scripts /asset/runtime_scripts
 # endregion Final
